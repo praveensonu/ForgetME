@@ -3,14 +3,14 @@ class Config:
         super(Config, self).__init__()
         self.loss_type      = 'grad_ascent' # (vanilla_grad_diff, grad_ascent, batch_grad_diff, ails_grad_diff, van_npo, dpo, retain_npo)
         self.model_id       =  #'meta-llama/Meta-Llama-3.1-8B-Instruct'
-        self.ft_model       = '/home/praveen/theoden/emnlp_25/outputs/finetuned_llama_3_1_8bmodel'
+        self.ft_model       = '' # not important for now
         self.LoRA_r         = 8
         self.LoRA_alpha     = 16
         self.LoRA_dropout   = 0.05
         self.lr             = 2e-05
         self.LoRa_targets   = ['v_proj', 'k_proj', 'up_proj', 'o_proj', 'gate_proj', 'q_proj', 'down_proj']
-        self.batch_size     = 2
-        self.gradient_accumulation_steps = 4
+        self.batch_size     = 2 # change this to any 2 power n number 
+        self.gradient_accumulation_steps = 1 
         self.num_epochs     = 10 # used 10 for dpo
         self.overwrite_dir  = True
         self.weight_decay   = 0.01 
