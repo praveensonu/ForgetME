@@ -55,8 +55,7 @@ def convert_raw_data_to_model_qa(tokenizer, max_length,  question, answer):
 class SingleDataset(Dataset):
     def __init__(self, data_path, 
                  tokenizer, 
-                 max_length=512, 
-                 template_format=None, 
+                 max_length=256, 
                  question_key = 'question',
                  answer_key = 'answer'):
         """
@@ -71,7 +70,6 @@ class SingleDataset(Dataset):
         self.data = pd.read_csv(data_path)
         self.tokenizer = tokenizer
         self.max_length = max_length
-        self.template_format = template_format
         self.qk = question_key
         self.ak = answer_key
 
@@ -86,7 +84,6 @@ class SingleDataset(Dataset):
             max_length=self.max_length, 
             question=question, 
             answer=answer,
-            template_format=self.template_format
         )
 
 
