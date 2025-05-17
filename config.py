@@ -17,7 +17,7 @@ class Config:
         self.exp_type       = 'grad_ascent' # (vanilla_grad_diff, grad_ascent, batch_grad_diff, ails_grad_diff, van_npo, dpo, retain_npo)
         self.save_dir       = f'outputs/wpu_{self.exp_type}_model' # we store the unlearnt model
         self.access_token   = '' # write your hf key
-        self.retriever_model= 'paraphrase-MiniLM-L6-v2'
+        self.retriever_model= 'paraphrase-MiniLM-L6-v2' # not important
         self.forget_path    = 'dpo_forget_idk.csv' # forget data path
         self.retain_path    = 'full_retain_qa.csv'  # retain data path
         self.results_path   = f'' # this is for evaluation results not important now
