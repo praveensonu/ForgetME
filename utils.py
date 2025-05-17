@@ -67,4 +67,4 @@ def create_single_dataset(data_path, tokenizer, max_length, template_format=None
     Returns:
         SingleDataset: Initialized single dataset
     """
-    return SingleDataset(data_path, tokenizer, max_length, template_format)
+    return SingleDataset(data_path, tokenizer, max_length)
