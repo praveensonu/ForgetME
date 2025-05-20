@@ -11,10 +11,9 @@ import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, TrainingArguments, default_data_collator
 from config import Config
 from peft import  LoraConfig, get_peft_model
-from data_module import grad_ascent_collator, cyclic_gd_collator
-from utils import (create_single_dataset, 
-                   find_all_linear_names,
-                   )
+from collators import grad_ascent_collator, cyclic_gd_collator
+from data_module import SingleDataset, DualDataset
+from utils import find_all_linear_names,
 from forget_trainer import GATrainer, GradDiffTrainer
 from accelerate import Accelerator
 import pandas as pd
@@ -68,7 +67,7 @@ model.config.use_cache = False
 
 
 if cfg.loss_type == 'grad_ascent' :
-    dataset = create_single_dataset(data_path = forget_path,
+    dataset = SingleDataset(forget_df = forget,
                                     tokenizer = tokenizer,
                                     max_length = 256) 
     
