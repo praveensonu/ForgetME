@@ -41,3 +41,21 @@ def cyclic_gd_collator(samples): # for vanilla/cyclic gradient difference, also 
         attention_mask = [s[2] for s in data]
         rets.append((torch.stack(input_ids), torch.stack(labels), torch.stack(attention_mask)))
     return rets
+
+
+
+def grad_ascent_collator(samples):
+    """
+    Collate function for the forget dataset only
+
+    Args:
+        samples (list of tuples): Each tuple contains (input_ids, labels, attention_mask)
+
+    Returns:
+        dict: batched_inputs, labels, attention_masks.
+
+    """
+    input_ids = torch.stack([sample[0] for sample in samples])
+    labels = torch.stack([sample[1] for sample in samples])
+    attention_mask = torch.stack([sample[2] for sample in samples])
+    return {'input_ids': input_ids, 'labels': labels, 'attention_mask': attention_mask}
