@@ -51,9 +51,10 @@ def convert_raw_data_to_model_qa(tokenizer, max_length,  question, answer):
 
 
 # this function creates a pytorch dataset for the given dataframe or csv path. Return a tuple of input_ids, labels, attention_mask
+# this class is for gradient ascent
 
 class SingleDataset(Dataset):
-    def __init__(self, data_path, 
+    def __init__(self, forget_df, 
                  tokenizer, 
                  max_length=256, 
                  question_key = 'question',
@@ -67,7 +68,7 @@ class SingleDataset(Dataset):
             max_length (int, optional): maximum sequence length for tokenization. Defaults to 512.
             template_format (str, optional): format template for structuring input
         """
-        self.data = pd.read_csv(data_path)
+        self.forget = forget_df.reset_index(drop=True)
         self.tokenizer = tokenizer
         self.max_length = max_length
         self.qk = question_key
@@ -87,8 +88,7 @@ class SingleDataset(Dataset):
         )
 
 
-
-
+# this class is for gradient difference, but does cyclic rotation of forget and retain (based on max length of the files)
 class DualDataset(Dataset): 
     """
     Dataset class for creating data for forget and retain (used by gradient difference)
