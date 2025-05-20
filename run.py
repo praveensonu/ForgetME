@@ -11,11 +11,11 @@ import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, TrainingArguments, default_data_collator
 from config import Config
 from peft import  LoraConfig, get_peft_model
-from data_module import custom_data_collator_forget
+from data_module import grad_ascent_collator, vanilla_gd_collator
 from utils import (create_single_dataset, 
                    find_all_linear_names,
                    )
-from forget_trainer import GATrainer
+from forget_trainer import GATrainer, GradDiffTrainer
 from accelerate import Accelerator
 import pandas as pd
 
@@ -95,10 +95,43 @@ if cfg.loss_type == 'grad_ascent' :
             args = training_args,
             train_dataset = dataset,
             tokenizer = tokenizer,
-            data_collator = custom_data_collator_forget,
+            data_collator = grad_ascent_collator,
             )
 
 
+if cfg.loss_type == 'vanilla_grad_diff':
+  dataset = DualDataset(forget = forget,
+                        retain = retain,
+                        max_length = 256, 
+                        tokenizer = tokenizer, 
+                        question_key = 'question',
+                        answer_key = 'answer)
+
+    training_args = TrainingArguments(
+        output_dir = cfg.save_dir,
+        overwrite_output_dir= True,
+        learning_rate = cfg.lr,
+        per_device_train_batch_size= cfg.batch_size,
+        num_train_epochs= cfg.num_epochs,
+        weight_decay = cfg.weight_decay,
+        logging_dir = f'{cfg.save_dir}/logs',
+        eval_strategy= 'no',
+        label_names = ['labels'],
+        bf16 = True,
+        gradient_accumulation_steps=1,
+        #save_only_model=True,
+        report_to = 'wandb',
+    )
+
+
+    trainer = GradDiffTrainer(
+            model = model, 
+            args = training_args,
+            train_dataset = dataset,
+            tokenizer = tokenizer,
+            data_collator = vanilla_gd_collator,
+            )
+                        
 
 trainer.train()
 accelerator.wait_for_everyone()
