@@ -89,6 +89,60 @@ class SingleDataset(Dataset):
 
 
 
+class DualDataset(Dataset): 
+    """
+    Dataset class for creating data for forget and retain (used by gradient difference)
+    
+    Args:
+        forget_data (pd.DataFrame): DataFrame containing 'question' and 'answer' columns for forgetting
+        retain_data (pd.DataFrame): DataFrame containing 'question' and 'answer' columns for retaining
+        tokenizer: tokenizer instance to process text
+        max_length (int): maximum sequence length
+        template_format (str, optional): format template for structuring input
+    
+    Returns:
+        Tuple of forget and retain samples:
+        (
+            (forget_input_ids, forget_labels, forget_attention_mask),
+            (retain_input_ids, retain_labels, retain_attention_mask)
+        )
+    """
+    def __init__(self, forget_data, retain_data, tokenizer, max_length, template_format=None,
+                 question_key = 'question',
+                 answer_key = 'answer'):
+        self.forget = forget_data.reset_index(drop=True)
+        self.retain = retain_data.reset_index(drop=True)
+        self.tokenizer = tokenizer
+        self.max_length = max_length
+        self.template_format = template_format
+        self.qk = question_key
+        self.ak = answer_key
+    def __len__(self):
+        return max(len(self.forget), len(self.retain))
+    
+    def __getitem__(self, idx):
+        # Cyclic rotation of data
+        forget_idx = idx % len(self.forget)
+        retain_idx = idx % len(self.retain)
+
+        forget_data = convert_raw_data_to_model_qa(
+            self.tokenizer, self.max_length,
+            self.forget.iloc[forget_idx][self.qk],
+            self.forget.iloc[forget_idx][self.ak],
+            self.template_format
+        )
+
+        retain_data = convert_raw_data_to_model_qa(
+            self.tokenizer, self.max_length,
+            self.retain.iloc[retain_idx][self.qk],
+            self.retain.iloc[retain_idx][self.ak],
+            self.template_format
+        )
+
+        return (forget_data, retain_data)
+
+
+
 def custom_data_collator_forget(samples):
     """
     Collate function for the forget dataset only
