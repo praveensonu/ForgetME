@@ -11,7 +11,7 @@ import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, TrainingArguments, default_data_collator
 from config import Config
 from peft import  LoraConfig, get_peft_model
-from data_module import grad_ascent_collator, vanilla_gd_collator
+from data_module import grad_ascent_collator, cyclic_gd_collator
 from utils import (create_single_dataset, 
                    find_all_linear_names,
                    )
@@ -129,7 +129,7 @@ if cfg.loss_type == 'vanilla_grad_diff':
             args = training_args,
             train_dataset = dataset,
             tokenizer = tokenizer,
-            data_collator = vanilla_gd_collator,
+            data_collator = cyclic_gd_collator,
             )
                         
 
