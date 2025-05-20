@@ -52,18 +52,5 @@ def find_all_linear_names(model):
     return list(lora_module_names)
 
 
-# creates the pytorch dataset. 
-def create_single_dataset(data_path, tokenizer, max_length, template_format=None):
-    """
-    Helper function to create a SingleDataset from file path
-    
-    Args:
-        data_path (str): Path to CSV file
-        tokenizer: Tokenizer instance
-        max_length (int): Maximum sequence length
-        template_format (str, optional): Format template
-        
-    Returns:
-        SingleDataset: Initialized single dataset
-    """
-    return SingleDataset(data_path, tokenizer, max_length)
+
+
