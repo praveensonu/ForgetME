@@ -14,7 +14,7 @@ from peft import  LoraConfig, get_peft_model
 from collators import grad_ascent_collator, cyclic_gd_collator
 from data_module import SingleDataset, DualDataset
 from utils import find_all_linear_names,
-from forget_trainer import GATrainer, GradDiffTrainer
+from forget_loss import GATrainer, GradDiffTrainer
 from accelerate import Accelerator
 import pandas as pd
 
