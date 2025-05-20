@@ -1,4 +1,13 @@
-def custom_gd_collator_forget(samples): # for vanilla/cyclic gradient difference, also can be extended to dpo, npo type
+from torch.utils.data import Dataset
+import torch
+import pandas as pd
+from transformers import PreTrainedTokenizer, default_data_collator
+
+
+
+
+
+def cyclic_gd_collator(samples): # for vanilla/cyclic gradient difference, also can be extended to dpo, npo type
     """
     Custom data collator for forget and retain data
 
